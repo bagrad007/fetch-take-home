@@ -19,6 +19,7 @@ const SearchPage = () => {
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [filteredDogs, setFilteredDogs] = useState<Dog[]>([]);
   const [totalDogs, setTotalDogs] = useState(0);
   const [nextCursor, setNextCursor] = useState<string>();
   const [prevCursor, setPrevCursor] = useState<string>();
@@ -40,29 +41,39 @@ const SearchPage = () => {
     initBreeds();
   }, []);
 
-  const loadDogs = async (from?: string) => {
+  const loadDogs = async (cursor?: string) => {
     try {
       const searchParams = {
         breeds: selectedBreeds,
         sort: `${sortField}:${sortDirection}`,
         size: 25,
-        from,
+        ...(cursor && { from: cursor }),
       };
       const searchResult = await searchDogs(searchParams);
       const dogData = await fetchDogs(searchResult.resultIds);
-      setDogs(dogData);
+
+      // Filter out invalid dogs (null/undefined)
+      const validDogs = dogData.filter(
+        (dog): dog is Dog => dog !== null && dog !== undefined,
+      );
+
+      setDogs(validDogs);
+      setFilteredDogs(validDogs);
       setTotalDogs(searchResult.total);
       setNextCursor(searchResult.next);
       setPrevCursor(searchResult.prev);
 
-      const zipCodes = dogData.map((dog) => dog.zip_code);
+      const zipCodes = validDogs.map((dog) => dog.zip_code);
       const locationData = await fetchLocations(zipCodes);
-      setLocations(locationData);
+
+      const validLocations = locationData.filter(
+        (loc): loc is Location => loc !== null && loc !== undefined,
+      );
+      setLocations(validLocations);
     } catch (error) {
       console.error("Failed to load dogs:", error);
     }
   };
-
   useEffect(() => {
     loadDogs();
   }, [selectedBreeds, sortField, sortDirection]);
@@ -102,13 +113,11 @@ const SearchPage = () => {
     loadDogs();
   };
 
-  const hasActiveFilters =
-    sortField !== "breed" ||
-    sortDirection !== "asc" ||
-    selectedBreeds.length > 0;
+  const hasActiveFilters = sortField !== "breed" || selectedBreeds.length > 0;
 
   const getLocation = (zip: string) => {
-    const location = locations.find((loc) => loc.zip_code === zip);
+    if (!zip) return "";
+    const location = locations.find((loc) => loc?.zip_code === zip);
     return location ? `${location.city}, ${location.state}` : "";
   };
 
@@ -156,7 +165,7 @@ const SearchPage = () => {
       <Box sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
         <Button
           disabled={!prevCursor}
-          onClick={() => prevCursor && loadDogs(prevCursor)}
+          onClick={() => loadDogs(prevCursor)}
           variant="contained"
         >
           Previous
@@ -164,7 +173,7 @@ const SearchPage = () => {
         <Typography>Total results: {totalDogs}</Typography>
         <Button
           disabled={!nextCursor}
-          onClick={() => nextCursor && loadDogs(nextCursor)}
+          onClick={() => loadDogs(nextCursor)}
           variant="contained"
         >
           Next
