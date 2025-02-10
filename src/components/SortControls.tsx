@@ -27,10 +27,10 @@ const SortControls = ({
   };
 
   return (
-    <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+    <Box sx={{ display: "flex", gap: 1, mb: 2, mt: 2 }}>
       <FormControl sx={{ minWidth: 120 }}>
-        <InputLabel>Sort By</InputLabel>
-        <Select value={sortField} onChange={handleFieldChange}>
+        <InputLabel sx={{ gap: 2 }}>Sort By</InputLabel>
+        <Select value={sortField} onChange={handleFieldChange} label="Sort by">
           <MenuItem value="breed">Breed</MenuItem>
           <MenuItem value="name">Name</MenuItem>
           <MenuItem value="age">Age</MenuItem>
@@ -38,7 +38,11 @@ const SortControls = ({
       </FormControl>
       <FormControl sx={{ minWidth: 120 }}>
         <InputLabel>Direction</InputLabel>
-        <Select value={sortDirection} onChange={handleDirectionChange}>
+        <Select
+          value={sortDirection}
+          onChange={handleDirectionChange}
+          label="Direction"
+        >
           <MenuItem value="asc">Ascending</MenuItem>
           <MenuItem value="desc">Descending</MenuItem>
         </Select>

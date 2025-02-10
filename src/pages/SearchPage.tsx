@@ -7,6 +7,7 @@ import BreedFilter from "../components/BreedFilter";
 import DogCard from "../components/DogCard";
 import SortControls from "../components/SortControls";
 import { useAuth } from "../contexts/AuthContext";
+import { RestartAlt } from "@mui/icons-material";
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -94,6 +95,18 @@ const SearchPage = () => {
     }
   };
 
+  const handleReset = () => {
+    setSelectedBreeds([]);
+    setSortField("breed");
+    setSortDirection("asc");
+    loadDogs();
+  };
+
+  const hasActiveFilters =
+    sortField !== "breed" ||
+    sortDirection !== "asc" ||
+    selectedBreeds.length > 0;
+
   const getLocation = (zip: string) => {
     const location = locations.find((loc) => loc.zip_code === zip);
     return location ? `${location.city}, ${location.state}` : "";
@@ -128,6 +141,17 @@ const SearchPage = () => {
           setSortDirection(dir);
         }}
       />
+
+      {hasActiveFilters && (
+        <Button
+          variant="outlined"
+          startIcon={<RestartAlt />}
+          onClick={handleReset}
+          sx={{ height: "fit-content" }}
+        >
+          Reset Search
+        </Button>
+      )}
 
       <Box sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
         <Button
