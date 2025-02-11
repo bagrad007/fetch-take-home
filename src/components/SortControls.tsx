@@ -1,11 +1,15 @@
 import {
   FormControl,
   InputLabel,
-  Select,
   MenuItem,
-  SelectChangeEvent,
+  Select,
   Box,
+  useTheme,
+  useMediaQuery,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
+import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
 
 interface SortControlsProps {
   sortField: string;
@@ -18,35 +22,67 @@ const SortControls = ({
   sortDirection,
   onSortChange,
 }: SortControlsProps) => {
-  const handleFieldChange = (event: SelectChangeEvent) => {
-    onSortChange(event.target.value, sortDirection);
-  };
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const handleDirectionChange = (event: SelectChangeEvent) => {
-    onSortChange(sortField, event.target.value as "asc" | "desc");
+  const handleDirectionToggle = () => {
+    onSortChange(sortField, sortDirection === "asc" ? "desc" : "asc");
   };
 
   return (
-    <Box sx={{ display: "flex", gap: 1, mb: 2, mt: 2 }}>
-      <FormControl sx={{ minWidth: 120 }}>
-        <InputLabel sx={{ gap: 2 }}>Sort By</InputLabel>
-        <Select value={sortField} onChange={handleFieldChange} label="Sort by">
-          <MenuItem value="breed">Breed</MenuItem>
-          <MenuItem value="name">Name</MenuItem>
-          <MenuItem value="age">Age</MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl sx={{ minWidth: 120 }}>
-        <InputLabel>Direction</InputLabel>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 0.5,
+      }}
+    >
+      <FormControl
+        size="small" // Always small size for compact layout
+        sx={{
+          minWidth: isMobile ? "100px" : "120px",
+          "& .MuiOutlinedInput-root": {
+            height: "40px", // Fixed height for consistency
+          },
+        }}
+      >
         <Select
-          value={sortDirection}
-          onChange={handleDirectionChange}
-          label="Direction"
+          value={sortField}
+          onChange={(e) => onSortChange(e.target.value, sortDirection)}
+          displayEmpty
+          renderValue={(value) => `Sort: ${value}`}
         >
-          <MenuItem value="asc">Ascending</MenuItem>
-          <MenuItem value="desc">Descending</MenuItem>
+          <MenuItem value="breed">Breed</MenuItem>
+          <MenuItem value="age">Age</MenuItem>
+          <MenuItem value="name">Name</MenuItem>
         </Select>
       </FormControl>
+
+      <Tooltip
+        title={`Sort ${sortDirection === "asc" ? "descending" : "ascending"}`}
+      >
+        <IconButton
+          onClick={handleDirectionToggle}
+          size="small"
+          sx={{
+            p: 0.5,
+            backgroundColor: "background.paper",
+            "&:hover": {
+              backgroundColor: "action.hover",
+            },
+          }}
+        >
+          {sortDirection === "asc" ? (
+            <>
+              <ArrowUpward fontSize="small" />
+            </>
+          ) : (
+            <>
+              <ArrowDownward fontSize="small" />
+            </>
+          )}
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 };

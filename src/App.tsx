@@ -1,3 +1,5 @@
+import { ThemeProvider } from "@mui/material";
+import theme from "./theme";
 import {
   BrowserRouter as Router,
   Routes,
@@ -9,15 +11,17 @@ import LoginPage from "./pages/LoginPage";
 import SearchPage from "./pages/SearchPage";
 
 const App = () => (
-  <AuthProvider>
-    <Router>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Router>
-  </AuthProvider>
+  <ThemeProvider theme={theme}>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  </ThemeProvider>
 );
 
 export default App;
