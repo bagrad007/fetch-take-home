@@ -1,15 +1,15 @@
 import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
+  Autocomplete,
+  Chip,
+  TextField,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 
 interface BreedFilterProps {
   breeds: string[];
   selectedBreeds: string[];
-  onSelect: (selected: string[]) => void;
+  onSelect: (breeds: string[]) => void;
 }
 
 const BreedFilter = ({
@@ -17,26 +17,50 @@ const BreedFilter = ({
   selectedBreeds,
   onSelect,
 }: BreedFilterProps) => {
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
-    onSelect(event.target.value as string[]);
-  };
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <FormControl fullWidth margin="normal">
-      <InputLabel>Filter by Breed</InputLabel>
-      <Select
-        multiple
-        value={selectedBreeds}
-        onChange={handleChange}
-        label="Filter by Breed"
-      >
-        {breeds.map((breed) => (
-          <MenuItem key={breed} value={breed}>
-            {breed}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Autocomplete
+      multiple
+      size="small" // Always small size
+      options={breeds}
+      value={selectedBreeds}
+      onChange={(_, newValue) => onSelect(newValue)}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="outlined"
+          placeholder="Filter breeds..."
+          sx={{
+            minWidth: isMobile ? "120px" : "200px",
+            "& .MuiOutlinedInput-root": {
+              height: "40px", // Fixed height for consistency
+              paddingTop: "2px",
+              paddingBottom: "2px",
+            },
+          }}
+        />
+      )}
+      renderTags={(value, getTagProps) =>
+        value.map((option, index) => (
+          <Chip
+            {...getTagProps({ index })}
+            key={option}
+            label={option}
+            size="small"
+            sx={{
+              maxWidth: "150px",
+              "& .MuiChip-label": {
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              },
+            }}
+          />
+        ))
+      }
+    />
   );
 };
 
