@@ -1,28 +1,40 @@
 import {
+  Pets,
+  RestartAlt,
+  Favorite as FavoriteIcon,
+} from "@mui/icons-material";
+import {
+  Alert,
   Box,
   Button,
+  Chip,
+  Collapse,
   Container,
+  Divider,
+  Fade,
   Grid,
   Modal,
-  Typography,
   Paper,
-  Divider,
-  Alert,
-  Tooltip,
-  useTheme,
-  useMediaQuery,
-  Fade,
   Skeleton,
+  Tooltip,
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dog, fetchBreeds, fetchDogs, matchDog, searchDogs } from "../api/dogs";
 import { fetchLocations, Location } from "../api/locations";
 import BreedFilter from "../components/BreedFilter";
 import DogCard from "../components/DogCard";
 import SortControls from "../components/SortControls";
-import { RestartAlt, Pets } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+
+type FavoriteDog = {
+  id: string;
+  name: string;
+  breed: string;
+};
 
 const SearchPage = () => {
   const theme = useTheme();
@@ -37,6 +49,7 @@ const SearchPage = () => {
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [favoriteDogs, setFavoriteDogs] = useState<FavoriteDog[]>([]);
   const [filteredDogs, setFilteredDogs] = useState<Dog[]>([]);
   const [totalDogs, setTotalDogs] = useState(0);
   const [nextCursor, setNextCursor] = useState<string>();
@@ -80,12 +93,24 @@ const SearchPage = () => {
     return location ? `${location.city}, ${location.state}` : "";
   };
 
-  const handleFavorite = (dogId: string) => {
-    setFavorites((prev) =>
-      prev.includes(dogId)
-        ? prev.filter((id) => id !== dogId)
-        : [...prev, dogId],
-    );
+  const handleFavorite = async (dogId: string) => {
+    if (favorites.includes(dogId)) {
+      setFavorites((prev) => prev.filter((id) => id !== dogId));
+      setFavoriteDogs((prev) => prev.filter((dog) => dog.id !== dogId));
+    } else {
+      setFavorites((prev) => [...prev, dogId]);
+      const [dogData] = await fetchDogs([dogId]);
+      if (dogData) {
+        setFavoriteDogs((prev) => [
+          ...prev,
+          {
+            id: dogData.id,
+            name: dogData.name,
+            breed: dogData.breed,
+          },
+        ]);
+      }
+    }
   };
 
   const handleMatch = async () => {
@@ -197,142 +222,149 @@ const SearchPage = () => {
         </Alert>
       )}
 
-      <Fade in timeout={1000}>
-        <Paper
-          elevation={3}
-          sx={{
-            p: isMobile ? 1 : 2, // Reduced padding for desktop too
-            mb: 3,
-            position: "sticky",
-            top: 16,
-            zIndex: 1100,
-            background: "rgba(255, 255, 255, 0.95)",
-            backdropFilter: "blur(8px)",
-          }}
-        >
-          <Box
+      <Box
+        sx={{
+          position: "sticky",
+          top: 16,
+          zIndex: 1200,
+          mb: 3,
+        }}
+      >
+        <Collapse in={favorites.length > 0}>
+          <Paper
+            elevation={2}
             sx={{
+              p: 1.5,
               display: "flex",
-              gap: isMobile ? 1 : 3, // Reduced gap for desktop
+              gap: 2,
+              overflowX: "auto",
               alignItems: "center",
-              flexDirection: isMobile ? "column" : "row",
-              width: "100%",
+              background: "rgba(255, 255, 255, 0.95)",
+              backdropFilter: "blur(8px)",
             }}
           >
-            {/* Combined Filters and Sort Section */}
+            <Typography
+              variant="subtitle2"
+              sx={{
+                pl: 1,
+                whiteSpace: "nowrap",
+                color: "primary.main",
+                fontWeight: "medium",
+              }}
+            >
+              Favorites:
+            </Typography>
             <Box
               sx={{
                 display: "flex",
-                gap: 2,
-                alignItems: "center",
-                flex: 1,
-                width: isMobile ? "100%" : "auto",
+                gap: 1,
+                flexWrap: "nowrap",
+                overflowX: "auto",
+                "&::-webkit-scrollbar": {
+                  height: 6,
+                },
+                "&::-webkit-scrollbar-track": {
+                  background: "#f1f1f1",
+                  borderRadius: 3,
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  background: "#888",
+                  borderRadius: 3,
+                },
+                "&::-webkit-scrollbar-thumb:hover": {
+                  background: "#555",
+                },
               }}
             >
-              {/* Breed Filter */}
-              <Box sx={{ minWidth: isMobile ? "120px" : "200px" }}>
-                <BreedFilter
-                  breeds={breeds}
-                  selectedBreeds={selectedBreeds}
-                  onSelect={setSelectedBreeds}
-                />
-              </Box>
-
-              {/* Sort Controls */}
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <SortControls
-                  sortField={sortField}
-                  sortDirection={sortDirection}
-                  onSortChange={(field, dir) => {
-                    setSortField(field);
-                    setSortDirection(dir);
+              {favoriteDogs.map((dog) => (
+                <Chip
+                  key={dog.id}
+                  label={
+                    <Box
+                      sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                    >
+                      <Typography variant="body2">{dog.name}</Typography>
+                      <Typography
+                        variant="caption"
+                        sx={{ color: "text.secondary" }}
+                      >
+                        ({dog.breed})
+                      </Typography>
+                    </Box>
+                  }
+                  onDelete={() => handleFavorite(dog.id)}
+                  size="small"
+                  color="primary"
+                  variant="outlined"
+                  sx={{
+                    minWidth: "fit-content",
+                    "& .MuiChip-label": {
+                      whiteSpace: "nowrap",
+                    },
                   }}
                 />
-              </Box>
-
-              {/* Reset Button */}
-              {hasActiveFilters && (
-                <Tooltip title="Clear all filters and sorting">
-                  <Button
-                    variant="outlined"
-                    size="small"
-                    onClick={handleReset}
-                    startIcon={<RestartAlt />}
-                    sx={{ ml: 1 }}
-                  >
-                    Reset
-                  </Button>
-                </Tooltip>
-              )}
+              ))}
             </Box>
-
-            {/* Favorites Section */}
-            <Box
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleMatch}
               sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 2,
-                ml: isMobile ? 0 : "auto", // Push to right on desktop
+                ml: "auto",
+                whiteSpace: "nowrap",
               }}
+              startIcon={<Pets />}
             >
-              <Typography
-                variant={isMobile ? "subtitle2" : "body1"}
-                sx={{ color: "primary.main" }}
-              >
-                {favorites.length} Favorites
-              </Typography>
-              <Tooltip
-                title={
-                  favorites.length === 0
-                    ? "Add some favorites first!"
-                    : "Find your perfect match"
-                }
-              >
-                <span>
-                  <Button
-                    onClick={handleMatch}
-                    disabled={favorites.length === 0}
-                    variant="contained"
-                    size="small"
-                  >
-                    Find Match
-                  </Button>
-                </span>
-              </Tooltip>
-            </Box>
-          </Box>
-        </Paper>
-      </Fade>
-
-      <Paper elevation={1} sx={{ p: 2, mb: 3 }}>
+              Find Match
+            </Button>
+          </Paper>
+        </Collapse>
+      </Box>
+      <Fade in timeout={1000}>
         <Box
           sx={{
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 2,
+            alignItems: "flex-start",
+            mb: 3,
+            position: "relative",
           }}
         >
-          <Button
-            disabled={!prevCursor || isLoading}
-            onClick={() => loadDogs(prevCursor)}
-            variant="contained"
-            size={isMobile ? "medium" : "large"}
+          {/* Left side - Breed Filter that stretches but stops before sort controls */}
+          <Box
+            sx={{
+              width: "calc(100% - 250px)", // Reserve exact space for sort controls
+              maxWidth: "calc(100% - 250px)", // Ensure it doesn't grow beyond this
+            }}
           >
-            Previous Page
-          </Button>
-          <Typography variant="h6">Total Results: {totalDogs}</Typography>
-          <Button
-            disabled={!nextCursor || isLoading}
-            onClick={() => loadDogs(nextCursor)}
-            variant="contained"
-            size={isMobile ? "medium" : "large"}
+            <BreedFilter
+              breeds={breeds}
+              selectedBreeds={selectedBreeds}
+              onSelect={setSelectedBreeds}
+            />
+          </Box>
+
+          {/* Right side - Sort Controls */}
+          <Box
+            sx={{
+              width: "240px", // Fixed width for sort controls
+              display: "flex",
+              gap: 1,
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
           >
-            Next Page
-          </Button>
+            <SortControls
+              sortField={sortField}
+              sortDirection={sortDirection}
+              onSortChange={(field, dir) => {
+                setSortField(field);
+                setSortDirection(dir);
+              }}
+            />
+          </Box>
         </Box>
-      </Paper>
+      </Fade>
 
       <Grid container spacing={3} sx={{ mb: 10 }}>
         {isLoading ? (
@@ -370,6 +402,35 @@ const SearchPage = () => {
           ))
         )}
       </Grid>
+      <Paper elevation={1} sx={{ p: 2, mb: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: 2,
+          }}
+        >
+          <Button
+            disabled={!prevCursor || isLoading}
+            onClick={() => loadDogs(prevCursor)}
+            variant="contained"
+            size={isMobile ? "medium" : "large"}
+          >
+            Previous Page
+          </Button>
+          <Typography variant="h6">Total Results: {totalDogs}</Typography>
+          <Button
+            disabled={!nextCursor || isLoading}
+            onClick={() => loadDogs(nextCursor)}
+            variant="contained"
+            size={isMobile ? "medium" : "large"}
+          >
+            Next Page
+          </Button>
+        </Box>
+      </Paper>
 
       <Modal
         open={!!matchedDog}
