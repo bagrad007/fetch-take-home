@@ -22,7 +22,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { MouseEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Dog, fetchBreeds, fetchDogs, matchDog, searchDogs } from "../api/dogs";
 import { fetchLocations, Location } from "../api/locations";
 import BreedFilter from "../components/BreedFilter";
@@ -41,6 +41,7 @@ const SearchPage = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
@@ -50,7 +51,6 @@ const SearchPage = () => {
   const [locations, setLocations] = useState<Location[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [favoriteDogs, setFavoriteDogs] = useState<FavoriteDog[]>([]);
-  const [filteredDogs, setFilteredDogs] = useState<Dog[]>([]);
   const [totalDogs, setTotalDogs] = useState(0);
   const [nextCursor, setNextCursor] = useState<string>();
   const [prevCursor, setPrevCursor] = useState<string>();
@@ -75,22 +75,21 @@ const SearchPage = () => {
     loadDogs();
   }, [selectedBreeds, sortField, sortDirection]);
 
+  useEffect(() => {
+    if (location.state?.scrollToTop) {
+      window.scrollTo(0, 0);
+    }
+  }, [location]);
+
   const handleLogout = async () => {
     logout();
     navigate("/");
   };
 
-  const handleReset = () => {
-    setSelectedBreeds([]);
-    setSortField("breed");
-    setSortDirection("asc");
-    loadDogs();
-  };
-
   const getLocation = (zip: string) => {
     if (!zip) return "";
     const location = locations.find((loc) => loc?.zip_code === zip);
-    return location ? `${location.city}, ${location.state}` : "";
+    return location ? `${location.city}` : "";
   };
 
   const handleFavorite = async (dogId: string) => {
@@ -124,8 +123,6 @@ const SearchPage = () => {
     }
   };
 
-  const hasActiveFilters = sortField !== "breed" || selectedBreeds.length > 0;
-
   const loadDogs = async (cursor?: string) => {
     setIsLoading(true);
     setError(null);
@@ -144,7 +141,6 @@ const SearchPage = () => {
       );
 
       setDogs(validDogs);
-      setFilteredDogs(validDogs);
       setTotalDogs(searchResult.total);
       setNextCursor(searchResult.next);
       setPrevCursor(searchResult.prev);
@@ -414,16 +410,28 @@ const SearchPage = () => {
         >
           <Button
             disabled={!prevCursor || isLoading}
-            onClick={() => loadDogs(prevCursor)}
+            onClick={async () => {
+              await loadDogs(prevCursor);
+              navigate(location.pathname + location.search, {
+                replace: true,
+                state: { scrollToTop: true },
+              });
+            }}
             variant="contained"
             size={isMobile ? "medium" : "large"}
           >
             Previous Page
           </Button>
-          <Typography variant="h6">Total Results: {totalDogs}</Typography>
+
           <Button
             disabled={!nextCursor || isLoading}
-            onClick={() => loadDogs(nextCursor)}
+            onClick={async () => {
+              await loadDogs(nextCursor);
+              navigate(location.pathname + location.search, {
+                replace: true,
+                state: { scrollToTop: true },
+              });
+            }}
             variant="contained"
             size={isMobile ? "medium" : "large"}
           >
