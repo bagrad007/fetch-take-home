@@ -1,10 +1,27 @@
-import client from "./client";
+import { apiClient, handleApiError } from "./config";
 
-export const login = async (name: string, email: string) => {
-  const response = await client.post("/auth/login", { name, email });
-  return response;
-};
+export interface LoginResponse {
+  success: boolean;
+}
 
-export const logout = async () => {
-  await client.post("/auth/logout");
+export const authApi = {
+  async login(name: string, email: string): Promise<LoginResponse> {
+    try {
+      const response = await apiClient.post<LoginResponse>("/auth/login", {
+        name,
+        email,
+      });
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+
+  async logout(): Promise<void> {
+    try {
+      await apiClient.post("/auth/logout");
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
 };

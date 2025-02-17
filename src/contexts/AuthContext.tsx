@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { fetchBreeds } from "../api/dogs";
-import { logout as apiLogout } from "../api/auth";
+import { dogsApi } from "../api";
+import { authApi } from "../api";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await fetchBreeds();
+        await dogsApi.fetchBreeds();
         setIsLoggedIn(true);
       } catch {
         setIsLoggedIn(false);
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logout = async () => {
     try {
-      await apiLogout(); // Use the imported API logout function instead
+      await authApi.logout();
       setIsLoggedIn(false);
     } catch (error) {
       console.error("Logout failed:", error);

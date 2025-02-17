@@ -1,17 +1,13 @@
-import client from "./client";
+import { apiClient, handleApiError } from "./config";
+import type { Location } from "../types";
 
-export interface Location {
-  zip_code: string;
-  latitude: number;
-  longitude: number;
-  city: string;
-  state: string;
-  county: string;
-}
-
-export const fetchLocations = async (
-  zipCodes: string[],
-): Promise<Location[]> => {
-  const response = await client.post<Location[]>("/locations", zipCodes);
-  return response.data;
+export const locationsApi = {
+  async fetchLocations(zipCodes: string[]): Promise<Location[]> {
+    try {
+      const response = await apiClient.post<Location[]>("/locations", zipCodes);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
 };

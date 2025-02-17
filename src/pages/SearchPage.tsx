@@ -1,8 +1,5 @@
-import {
-  Pets,
-  RestartAlt,
-  Favorite as FavoriteIcon,
-} from "@mui/icons-material";
+import { Pets } from "@mui/icons-material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {
   Alert,
   Box,
@@ -10,31 +7,24 @@ import {
   Chip,
   Collapse,
   Container,
-  Divider,
   Fade,
   Grid,
   Modal,
   Paper,
   Skeleton,
-  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Dog, fetchBreeds, fetchDogs, matchDog, searchDogs } from "../api/dogs";
-import { fetchLocations, Location } from "../api/locations";
+import { dogsApi } from "../api";
 import BreedFilter from "../components/BreedFilter";
 import DogCard from "../components/DogCard";
 import SortControls from "../components/SortControls";
 import { useAuth } from "../contexts/AuthContext";
-
-type FavoriteDog = {
-  id: string;
-  name: string;
-  breed: string;
-};
+import { useDogs } from "../hooks/useDogs";
+import { useFavorites } from "../hooks/useFavorites";
 
 const SearchPage = () => {
   const theme = useTheme();
@@ -47,33 +37,45 @@ const SearchPage = () => {
   const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
   const [sortField, setSortField] = useState("breed");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const [dogs, setDogs] = useState<Dog[]>([]);
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [favoriteDogs, setFavoriteDogs] = useState<FavoriteDog[]>([]);
-  const [totalDogs, setTotalDogs] = useState(0);
-  const [nextCursor, setNextCursor] = useState<string>();
-  const [prevCursor, setPrevCursor] = useState<string>();
-  const [matchedDog, setMatchedDog] = useState<Dog | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+
+  const {
+    dogs,
+    locations,
+    nextCursor,
+    prevCursor,
+    isLoading,
+    error,
+    loadDogs,
+  } = useDogs();
+
+  const {
+    favorites,
+    favoriteDogs,
+    matchedDog,
+    handleFavorite,
+    handleMatch,
+    setMatchedDog,
+  } = useFavorites();
 
   useEffect(() => {
     const initBreeds = async () => {
       try {
-        const breeds = await fetchBreeds();
+        const breeds = await dogsApi.fetchBreeds();
         setBreeds(breeds);
       } catch (error) {
         console.error("Failed to fetch breeds:", error);
-        setError("Failed to load breeds. Please try again.");
       }
     };
     initBreeds();
   }, []);
 
   useEffect(() => {
-    loadDogs();
-  }, [selectedBreeds, sortField, sortDirection]);
+    loadDogs({
+      breeds: selectedBreeds,
+      sort: `${sortField}:${sortDirection}`,
+      size: 25,
+    });
+  }, [selectedBreeds, sortField, sortDirection, loadDogs]);
 
   useEffect(() => {
     if (location.state?.scrollToTop) {
@@ -90,74 +92,6 @@ const SearchPage = () => {
     if (!zip) return "";
     const location = locations.find((loc) => loc?.zip_code === zip);
     return location ? `${location.city}` : "";
-  };
-
-  const handleFavorite = async (dogId: string) => {
-    if (favorites.includes(dogId)) {
-      setFavorites((prev) => prev.filter((id) => id !== dogId));
-      setFavoriteDogs((prev) => prev.filter((dog) => dog.id !== dogId));
-    } else {
-      setFavorites((prev) => [...prev, dogId]);
-      const [dogData] = await fetchDogs([dogId]);
-      if (dogData) {
-        setFavoriteDogs((prev) => [
-          ...prev,
-          {
-            id: dogData.id,
-            name: dogData.name,
-            breed: dogData.breed,
-          },
-        ]);
-      }
-    }
-  };
-
-  const handleMatch = async () => {
-    if (favorites.length === 0) return;
-    try {
-      const matchId = await matchDog(favorites);
-      const [matched] = await fetchDogs([matchId]);
-      setMatchedDog(matched);
-    } catch (error) {
-      console.error("Failed to generate match:", error);
-    }
-  };
-
-  const loadDogs = async (cursor?: string) => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const searchParams = {
-        breeds: selectedBreeds,
-        sort: `${sortField}:${sortDirection}`,
-        size: 25,
-        ...(cursor && { from: cursor }),
-      };
-      const searchResult = await searchDogs(searchParams);
-      const dogData = await fetchDogs(searchResult.resultIds);
-
-      const validDogs = dogData.filter(
-        (dog): dog is Dog => dog !== null && dog !== undefined,
-      );
-
-      setDogs(validDogs);
-      setTotalDogs(searchResult.total);
-      setNextCursor(searchResult.next);
-      setPrevCursor(searchResult.prev);
-
-      const zipCodes = validDogs.map((dog) => dog.zip_code);
-      const locationData = await fetchLocations(zipCodes);
-
-      const validLocations = locationData.filter(
-        (loc): loc is Location => loc !== null && loc !== undefined,
-      );
-      setLocations(validLocations);
-    } catch (error) {
-      setError("Failed to load dogs. Please try again.");
-      console.error("Failed to load dogs:", error);
-    } finally {
-      setIsLoading(false);
-    }
   };
 
   const DogCardSkeleton = () => (
@@ -209,7 +143,17 @@ const SearchPage = () => {
           severity="error"
           sx={{ mb: 3 }}
           action={
-            <Button color="inherit" size="small" onClick={() => loadDogs()}>
+            <Button
+              color="inherit"
+              size="small"
+              onClick={() =>
+                loadDogs({
+                  breeds: selectedBreeds,
+                  sort: `${sortField}:${sortDirection}`,
+                  size: 25,
+                })
+              }
+            >
               Retry
             </Button>
           }
@@ -224,6 +168,7 @@ const SearchPage = () => {
           top: 16,
           zIndex: 1200,
           mb: 3,
+          pl: 1,
         }}
       >
         <Collapse in={favorites.length > 0}>
@@ -245,7 +190,6 @@ const SearchPage = () => {
                 pl: 1,
                 whiteSpace: "nowrap",
                 color: "primary.main",
-                fontWeight: "medium",
               }}
             >
               Favorites:
@@ -309,13 +253,13 @@ const SearchPage = () => {
                 ml: "auto",
                 whiteSpace: "nowrap",
               }}
-              startIcon={<Pets />}
             >
-              Find Match
+              <ArrowForwardIcon />
             </Button>
           </Paper>
         </Collapse>
       </Box>
+
       <Fade in timeout={1000}>
         <Box
           sx={{
@@ -324,13 +268,15 @@ const SearchPage = () => {
             alignItems: "flex-start",
             mb: 3,
             position: "relative",
+            px: { xs: 1, md: 2 },
+            flexDirection: isMobile ? "column" : "row",
+            gap: isMobile ? 2 : 0,
           }}
         >
-          {/* Left side - Breed Filter that stretches but stops before sort controls */}
           <Box
             sx={{
-              width: "calc(100% - 250px)", // Reserve exact space for sort controls
-              maxWidth: "calc(100% - 250px)", // Ensure it doesn't grow beyond this
+              width: isMobile ? "100%" : "calc(100% - 250px)",
+              maxWidth: isMobile ? "100%" : "calc(100% - 250px)",
             }}
           >
             <BreedFilter
@@ -340,14 +286,13 @@ const SearchPage = () => {
             />
           </Box>
 
-          {/* Right side - Sort Controls */}
           <Box
             sx={{
-              width: "240px", // Fixed width for sort controls
+              width: isMobile ? "100%" : "240px",
               display: "flex",
               gap: 1,
               alignItems: "center",
-              justifyContent: "flex-end",
+              justifyContent: isMobile ? "flex-start" : "flex-end",
             }}
           >
             <SortControls
@@ -361,6 +306,8 @@ const SearchPage = () => {
           </Box>
         </Box>
       </Fade>
+
+      {/* Grid for listing dogs */}
 
       <Grid container spacing={3} sx={{ mb: 10 }}>
         {isLoading ? (
@@ -398,47 +345,60 @@ const SearchPage = () => {
           ))
         )}
       </Grid>
-      <Paper elevation={1} sx={{ p: 2, mb: 3 }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 2,
+
+      {/* Pagination section */}
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          width: "100%",
+          mb: 1.5,
+        }}
+      >
+        <Button
+          disabled={!prevCursor || isLoading}
+          onClick={async () => {
+            try {
+              await loadDogs({
+                breeds: selectedBreeds,
+                sort: `${sortField}:${sortDirection}`,
+                from: prevCursor, // Use raw cursor value from state
+              });
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            } catch (error) {
+              console.error("Failed to load previous page:", error);
+            }
           }}
         >
-          <Button
-            disabled={!prevCursor || isLoading}
-            onClick={async () => {
-              await loadDogs(prevCursor);
-              navigate(location.pathname + location.search, {
-                replace: true,
-                state: { scrollToTop: true },
-              });
-            }}
-            variant="contained"
-            size={isMobile ? "medium" : "large"}
-          >
-            Previous Page
-          </Button>
+          Previous Page
+        </Button>
 
-          <Button
-            disabled={!nextCursor || isLoading}
-            onClick={async () => {
-              await loadDogs(nextCursor);
-              navigate(location.pathname + location.search, {
-                replace: true,
-                state: { scrollToTop: true },
+        <Typography variant="body1" color="text.secondary">
+          Page Results: {dogs.length}
+        </Typography>
+
+        <Button
+          disabled={!nextCursor || isLoading}
+          onClick={async () => {
+            try {
+              await loadDogs({
+                breeds: selectedBreeds,
+                sort: `${sortField}:${sortDirection}`,
+                from: nextCursor,
               });
-            }}
-            variant="contained"
-            size={isMobile ? "medium" : "large"}
-          >
-            Next Page
-          </Button>
-        </Box>
-      </Paper>
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            } catch (error) {
+              console.error("Failed to load next page:", error);
+            }
+          }}
+          variant="contained"
+          size={isMobile ? "medium" : "large"}
+        >
+          Next Page
+        </Button>
+      </Box>
 
       <Modal
         open={!!matchedDog}

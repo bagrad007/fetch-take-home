@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/auth";
+import { authApi } from "../api";
 import { useAuth } from "../contexts/AuthContext";
-import { Button, TextField, Container, Typography, Box } from "@mui/material";
-
 import LoginForm from "../components/LoginForm";
+import { Container } from "@mui/material";
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -12,7 +10,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (name: string, email: string) => {
     try {
-      await login(name, email);
+      await authApi.login(name, email);
       authLogin();
       navigate("/search");
     } catch (error) {
