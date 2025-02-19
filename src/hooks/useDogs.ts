@@ -17,12 +17,21 @@ export const useDogs = () => {
     try {
       const searchResult = await dogsApi.searchDogs({
         ...params,
-        from: params.from || undefined,
+        size: 25,
+        from: params.from,
       });
 
-      // Store cursors
-      setNextCursor(searchResult.next);
-      setPrevCursor(searchResult.prev);
+      // The API returns full URL paths as cursors (e.g., "/dogs/search?sort=breed:asc&size=25&from=25")
+      // We need to extract just the 'from' value to use as the offset for pagination
+
+      const extractFromValue = (url: string | undefined) => {
+        if (!url) return undefined;
+        const searchParams = new URLSearchParams(url.split("?")[1]);
+        return searchParams.get("from") || undefined;
+      };
+
+      setNextCursor(extractFromValue(searchResult.next));
+      setPrevCursor(extractFromValue(searchResult.prev));
 
       if (searchResult.resultIds.length > 0) {
         const dogData = await dogsApi.fetchDogs(searchResult.resultIds);
@@ -32,7 +41,6 @@ export const useDogs = () => {
         setDogs(validDogs);
         setTotalDogs(searchResult.total);
 
-        // Fetch locations
         const zipCodes = validDogs.map((dog) => dog.zip_code);
         const locationData = await locationsApi.fetchLocations(zipCodes);
         setLocations(
@@ -51,6 +59,31 @@ export const useDogs = () => {
     }
   }, []);
 
+  const loadNextPage = useCallback(
+    (currentParams: DogSearchParams) => {
+      if (nextCursor) {
+        console.log("Loading next page with cursor:", nextCursor);
+        loadDogs({
+          ...currentParams,
+          from: nextCursor,
+        });
+      }
+    },
+    [nextCursor, loadDogs],
+  );
+
+  const loadPrevPage = useCallback(
+    (currentParams: DogSearchParams) => {
+      if (prevCursor) {
+        loadDogs({
+          ...currentParams,
+          from: prevCursor,
+        });
+      }
+    },
+    [prevCursor, loadDogs],
+  );
+
   return {
     dogs,
     locations,
@@ -60,5 +93,7 @@ export const useDogs = () => {
     isLoading,
     error,
     loadDogs,
+    loadNextPage,
+    loadPrevPage,
   };
 };

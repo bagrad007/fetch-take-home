@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 export const apiClient = axios.create({
   baseURL: "https://frontend-take-home-service.fetch.com",
   withCredentials: true,
+  credentials: "include",
   headers: {
     "Content-Type": "application/json",
   },
@@ -20,6 +21,7 @@ export const apiClient = axios.create({
     return searchParams.toString();
   },
 } as AxiosRequestConfig);
+
 export class ApiError extends Error {
   constructor(
     message: string,

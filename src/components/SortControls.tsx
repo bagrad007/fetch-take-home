@@ -38,11 +38,11 @@ const SortControls = ({
       }}
     >
       <FormControl
-        size="small" // Always small size for compact layout
+        size="small"
         sx={{
           minWidth: isMobile ? "100px" : "120px",
           "& .MuiOutlinedInput-root": {
-            height: "40px", // Fixed height for consistency
+            height: "40px",
           },
         }}
       >

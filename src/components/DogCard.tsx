@@ -25,7 +25,6 @@ const DogCard = ({
 }: DogCardProps) => {
   const [imageError, setImageError] = useState(false);
 
-  // Fallback image URL or placeholder
   const fallbackImage =
     "https://via.placeholder.com/200x200?text=No+Image+Available";
 

@@ -1,3 +1,4 @@
+import qs from "qs";
 import type { Dog, DogSearchParams, DogSearchResponse } from "../types";
 import { apiClient, handleApiError } from "./config";
 
@@ -12,18 +13,15 @@ export const dogsApi = {
   },
 
   async searchDogs(params: DogSearchParams): Promise<DogSearchResponse> {
-    let cloneParams = { ...params };
-    let decodeColon = cloneParams.from?.replace("%3A", ":");
-
-    console.log(cloneParams.from?.replace("%3A", ":"));
     try {
       const response = await apiClient.get<DogSearchResponse>("/dogs/search", {
         params: {
           ...params,
           sort: params.sort || "breed:asc",
           breeds: params.breeds?.length ? params.breeds : undefined,
-          from: decodeColon || undefined,
+          from: params.from || undefined,
         },
+        paramsSerializer: (params) => qs.stringify(params, { indices: false }),
       });
       return response.data;
     } catch (error) {
@@ -33,7 +31,6 @@ export const dogsApi = {
 
   async fetchDogs(dogIds: string[]): Promise<Dog[]> {
     try {
-      // API limits to 100 dogs per request
       if (dogIds.length > 100) {
         throw new Error("Cannot fetch more than 100 dogs at once");
       }

@@ -46,6 +46,8 @@ const SearchPage = () => {
     isLoading,
     error,
     loadDogs,
+    loadNextPage,
+    loadPrevPage,
   } = useDogs();
 
   const {
@@ -307,7 +309,7 @@ const SearchPage = () => {
         </Box>
       </Fade>
 
-      {/* Grid for listing dogs */}
+      {/* Grid for dogs */}
 
       <Grid container spacing={3} sx={{ mb: 10 }}>
         {isLoading ? (
@@ -346,7 +348,7 @@ const SearchPage = () => {
         )}
       </Grid>
 
-      {/* Pagination section */}
+      {/* Pagination */}
 
       <Box
         sx={{
@@ -359,17 +361,12 @@ const SearchPage = () => {
       >
         <Button
           disabled={!prevCursor || isLoading}
-          onClick={async () => {
-            try {
-              await loadDogs({
-                breeds: selectedBreeds,
-                sort: `${sortField}:${sortDirection}`,
-                from: prevCursor, // Use raw cursor value from state
-              });
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            } catch (error) {
-              console.error("Failed to load previous page:", error);
-            }
+          onClick={() => {
+            loadPrevPage({
+              breeds: selectedBreeds,
+              sort: `${sortField}:${sortDirection}`,
+            });
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
           Previous Page
@@ -381,17 +378,12 @@ const SearchPage = () => {
 
         <Button
           disabled={!nextCursor || isLoading}
-          onClick={async () => {
-            try {
-              await loadDogs({
-                breeds: selectedBreeds,
-                sort: `${sortField}:${sortDirection}`,
-                from: nextCursor,
-              });
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            } catch (error) {
-              console.error("Failed to load next page:", error);
-            }
+          onClick={() => {
+            loadNextPage({
+              breeds: selectedBreeds,
+              sort: `${sortField}:${sortDirection}`,
+            });
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           variant="contained"
           size={isMobile ? "medium" : "large"}

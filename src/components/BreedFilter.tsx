@@ -56,8 +56,8 @@ const BreedFilter = ({
         width: "100%",
         "& .MuiAutocomplete-inputRoot": {
           flexWrap: "wrap",
-          maxHeight: "100px", // Set a max height
-          overflowY: "auto", // Make it scrollable
+          maxHeight: "100px",
+          overflowY: "auto",
           "&::-webkit-scrollbar": {
             width: "8px",
           },
