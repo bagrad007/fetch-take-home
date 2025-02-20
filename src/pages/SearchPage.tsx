@@ -48,6 +48,7 @@ const SearchPage = () => {
     loadDogs,
     loadNextPage,
     loadPrevPage,
+    totalDogs,
   } = useDogs();
 
   const {
@@ -309,6 +310,12 @@ const SearchPage = () => {
         </Box>
       </Fade>
 
+      <Box sx={{ ml: isMobile ? "26%" : "39%" }}>
+        <Typography variant="body1" color="text.secondary">
+          Showing {dogs.length} of {totalDogs} dogs
+        </Typography>
+      </Box>
+
       {/* Grid for dogs */}
 
       <Grid container spacing={3} sx={{ mb: 10 }}>
@@ -353,10 +360,16 @@ const SearchPage = () => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          position: "relative",
+          bottom: 5,
+          p: 1.5,
           width: "100%",
-          mb: 1.5,
+          gap: 2,
+          overflowX: "auto",
+          alignItems: "center",
+          justifyContent: "space-between",
+          background: "rgba(255, 255, 255, 0.95)",
+          backdropFilter: "blur(8px)",
         }}
       >
         <Button
@@ -366,15 +379,11 @@ const SearchPage = () => {
               breeds: selectedBreeds,
               sort: `${sortField}:${sortDirection}`,
             });
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigate(".", { state: { scrollToTop: true } });
           }}
         >
           Previous Page
         </Button>
-
-        <Typography variant="body1" color="text.secondary">
-          Page Results: {dogs.length}
-        </Typography>
 
         <Button
           disabled={!nextCursor || isLoading}
@@ -383,9 +392,8 @@ const SearchPage = () => {
               breeds: selectedBreeds,
               sort: `${sortField}:${sortDirection}`,
             });
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigate(".", { state: { scrollToTop: true } });
           }}
-          variant="contained"
           size={isMobile ? "medium" : "large"}
         >
           Next Page

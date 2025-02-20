@@ -1,13 +1,12 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { CreateAxiosDefaults } from "axios";
 
 export const apiClient = axios.create({
   baseURL: "https://frontend-take-home-service.fetch.com",
   withCredentials: true,
-  credentials: "include",
   headers: {
     "Content-Type": "application/json",
   },
-  paramsSerializer: (params: any) => {
+  paramsSerializer: (params: CreateAxiosDefaults) => {
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
@@ -20,7 +19,7 @@ export const apiClient = axios.create({
     });
     return searchParams.toString();
   },
-} as AxiosRequestConfig);
+});
 
 export class ApiError extends Error {
   constructor(
