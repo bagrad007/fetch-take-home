@@ -1,7 +1,7 @@
 {
   "name": "fetch-take-home",
   "version": "1.0.0",
-  "homepage": "https://github.com/bagrad007/fetch-take-home",
+  "homepage": "https://bagrad007.github.io/fetch-take-home",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
