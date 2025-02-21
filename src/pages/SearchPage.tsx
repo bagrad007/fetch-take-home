@@ -356,20 +356,15 @@ const SearchPage = () => {
       </Grid>
 
       {/* Pagination */}
-
       <Box
         sx={{
           display: 'flex',
-          position: 'relative',
-          bottom: 5,
-          p: 1.5,
-          width: '100%',
+          justifyContent: 'center',
           gap: 2,
-          overflowX: 'auto',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(8px)',
+          bottom: 5,
+          margin: 'auto',
+          width: '50%',
+          padding: '10px',
         }}
       >
         <Button
