@@ -1,15 +1,18 @@
 {
+  "name": "fetch-take-home",
+  "version": "1.0.0",
   "homepage": "https://github.com/bagrad007/fetch-take-home",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!@mui)/\"",
     "eject": "react-scripts eject",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "eslint 'src/**/*.{js,jsx,ts,tsx}' --fix",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md}'",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "test:coverage": "react-scripts test --coverage --watchAll=false --transformIgnorePatterns \"node_modules/(?!@mui)/\""
   },
   "dependencies": {
     "@emotion/react": "^11.0.0",
@@ -29,13 +32,22 @@
     "react-router-dom": "^6.0.0"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.26.3",
+    "@babel/preset-typescript": "^7.26.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/jest": "^27.5.2",
     "@types/node": "^16.0.0",
     "@types/qs": "^6.9.18",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@typescript-eslint/parser": "^5.62.0",
     "gh-pages": "^6.3.0",
+    "jest": "^27.5.1",
+    "jest-environment-jsdom": "^27.5.1",
     "react-scripts": "5.0.1",
+    "ts-jest": "^27.1.5",
     "typescript": "^4.5.0"
   },
   "browserslist": {

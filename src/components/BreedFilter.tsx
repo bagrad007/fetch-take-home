@@ -17,12 +17,16 @@ const BreedFilter = ({
       size="small"
       options={breeds}
       value={selectedBreeds}
-      onChange={(_, newValue) => onSelect(newValue)}
+      onChange={(e, newValue) => onSelect(newValue)}
       renderInput={(params) => (
         <TextField
           {...params}
           variant="outlined"
           placeholder="Filter breeds..."
+          inputProps={{
+            ...params.inputProps,
+            'aria-label': 'Filter breeds',
+          }}
           sx={{
             width: '100%',
           }}
@@ -35,6 +39,9 @@ const BreedFilter = ({
             key={option}
             label={option}
             size="small"
+            onDelete={() =>
+              onSelect(selectedBreeds.filter((b) => b !== option))
+            }
             sx={{
               maxWidth: '120px',
               '& .MuiChip-label': {
