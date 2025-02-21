@@ -14,7 +14,6 @@ const mockDog = {
 describe('DogCard', () => {
   const mockHandleFavorite = jest.fn();
 
-  //Define a type for DogCard Props
   type TestDogCardProps = DogCardProps & {
     location?: string;
   };

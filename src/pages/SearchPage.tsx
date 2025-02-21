@@ -253,8 +253,8 @@ const SearchPage = () => {
               size="small"
               onClick={handleMatch}
               sx={{
-                width: '90px', // Gives the button a fixed width
-                flexShrink: 0, // Prevents the button from shrinking in a flex container
+                width: '90px',
+                flexShrink: 0,
                 whiteSpace: 'nowrap',
                 ml: 'auto',
               }}
