@@ -1,10 +1,10 @@
-import axios, { CreateAxiosDefaults } from "axios";
+import axios, { CreateAxiosDefaults } from 'axios';
 
 export const apiClient = axios.create({
-  baseURL: "https://frontend-take-home-service.fetch.com",
+  baseURL: 'https://frontend-take-home-service.fetch.com',
   withCredentials: true,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
   paramsSerializer: (params: CreateAxiosDefaults) => {
     const searchParams = new URLSearchParams();
@@ -28,14 +28,14 @@ export class ApiError extends Error {
     public code?: string,
   ) {
     super(message);
-    this.name = "ApiError";
+    this.name = 'ApiError';
   }
 }
 
 export const handleApiError = (error: unknown) => {
   if (axios.isAxiosError(error)) {
     throw new ApiError(
-      error.response?.data?.message || "An error occurred",
+      error.response?.data?.message || 'An error occurred',
       error.response?.status,
       error.response?.data?.code,
     );

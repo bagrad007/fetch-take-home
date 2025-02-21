@@ -1,4 +1,4 @@
-import { apiClient, handleApiError } from "./config";
+import { apiClient, handleApiError } from './config';
 
 export interface LoginResponse {
   success: boolean;
@@ -7,7 +7,7 @@ export interface LoginResponse {
 export const authApi = {
   async login(name: string, email: string): Promise<LoginResponse> {
     try {
-      const response = await apiClient.post<LoginResponse>("/auth/login", {
+      const response = await apiClient.post<LoginResponse>('/auth/login', {
         name,
         email,
       });
@@ -19,7 +19,7 @@ export const authApi = {
 
   async logout(): Promise<void> {
     try {
-      await apiClient.post("/auth/logout");
+      await apiClient.post('/auth/logout');
     } catch (error) {
       throw handleApiError(error);
     }

@@ -1,8 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { authApi } from "../api";
-import { useAuth } from "../contexts/AuthContext";
-import LoginForm from "../components/LoginForm";
-import { Container } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
+import { authApi } from '../api';
+import { useAuth } from '../contexts/AuthContext';
+import LoginForm from '../components/LoginForm';
+import { Container } from '@mui/material';
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -12,9 +12,9 @@ const LoginPage = () => {
     try {
       await authApi.login(name, email);
       authLogin();
-      navigate("/search");
+      navigate('/search');
     } catch (error) {
-      alert("Login failed. Please try again.");
+      alert('Login failed. Please try again.');
     }
   };
 

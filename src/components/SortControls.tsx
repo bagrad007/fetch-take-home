@@ -1,6 +1,5 @@
 import {
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Box,
@@ -8,13 +7,13 @@ import {
   useMediaQuery,
   IconButton,
   Tooltip,
-} from "@mui/material";
-import { ArrowUpward, ArrowDownward } from "@mui/icons-material";
+} from '@mui/material';
+import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
 
 interface SortControlsProps {
   sortField: string;
-  sortDirection: "asc" | "desc";
-  onSortChange: (field: string, direction: "asc" | "desc") => void;
+  sortDirection: 'asc' | 'desc';
+  onSortChange: (field: string, direction: 'asc' | 'desc') => void;
 }
 
 const SortControls = ({
@@ -23,26 +22,26 @@ const SortControls = ({
   onSortChange,
 }: SortControlsProps) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleDirectionToggle = () => {
-    onSortChange(sortField, sortDirection === "asc" ? "desc" : "asc");
+    onSortChange(sortField, sortDirection === 'asc' ? 'desc' : 'asc');
   };
 
   return (
     <Box
       sx={{
-        display: "flex",
-        alignItems: "center",
+        display: 'flex',
+        alignItems: 'center',
         gap: 0.5,
       }}
     >
       <FormControl
         size="small"
         sx={{
-          minWidth: isMobile ? "100px" : "120px",
-          "& .MuiOutlinedInput-root": {
-            height: "40px",
+          minWidth: isMobile ? '100px' : '120px',
+          '& .MuiOutlinedInput-root': {
+            height: '40px',
           },
         }}
       >
@@ -59,27 +58,23 @@ const SortControls = ({
       </FormControl>
 
       <Tooltip
-        title={`Sort ${sortDirection === "asc" ? "descending" : "ascending"}`}
+        title={`Sort ${sortDirection === 'asc' ? 'descending' : 'ascending'}`}
       >
         <IconButton
           onClick={handleDirectionToggle}
           size="small"
           sx={{
             p: 0.5,
-            backgroundColor: "background.paper",
-            "&:hover": {
-              backgroundColor: "action.hover",
+            backgroundColor: 'background.paper',
+            '&:hover': {
+              backgroundColor: 'action.hover',
             },
           }}
         >
-          {sortDirection === "asc" ? (
-            <>
-              <ArrowUpward fontSize="small" />
-            </>
+          {sortDirection === 'asc' ? (
+            <ArrowUpward fontSize="small" />
           ) : (
-            <>
-              <ArrowDownward fontSize="small" />
-            </>
+            <ArrowDownward fontSize="small" />
           )}
         </IconButton>
       </Tooltip>
