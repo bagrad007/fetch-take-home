@@ -127,7 +127,7 @@ const SearchPage = () => {
             }}
           >
             <Typography variant="h4" sx={{ fontWeight: 'medium' }}>
-              D<Pets />g Search
+              Find and Match With Your Favorite Dogs!
             </Typography>
             <Button
               onClick={handleLogout}

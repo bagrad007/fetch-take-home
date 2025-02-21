@@ -1,6 +1,7 @@
-# Getting Started with Create React App
+# fetch take home project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a take home project I was sent by the company fetch!
+There isn't a whole lot to running the app locally,
 
 ## Available Scripts
 
