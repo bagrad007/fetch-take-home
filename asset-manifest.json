@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/bagrad007/fetch-take-home/static/css/main.e6c13ad2.css",
-    "main.js": "/bagrad007/fetch-take-home/static/js/main.d4d5467f.js",
-    "index.html": "/bagrad007/fetch-take-home/index.html",
-    "main.e6c13ad2.css.map": "/bagrad007/fetch-take-home/static/css/main.e6c13ad2.css.map",
-    "main.d4d5467f.js.map": "/bagrad007/fetch-take-home/static/js/main.d4d5467f.js.map"
+    "main.css": "/fetch-take-home/static/css/main.e6c13ad2.css",
+    "main.js": "/fetch-take-home/static/js/main.d4d5467f.js",
+    "index.html": "/fetch-take-home/index.html",
+    "main.e6c13ad2.css.map": "/fetch-take-home/static/css/main.e6c13ad2.css.map",
+    "main.d4d5467f.js.map": "/fetch-take-home/static/js/main.d4d5467f.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
