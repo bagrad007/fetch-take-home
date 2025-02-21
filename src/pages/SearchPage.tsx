@@ -255,7 +255,8 @@ const SearchPage = () => {
               sx={{
                 width: '90px', // Gives the button a fixed width
                 flexShrink: 0, // Prevents the button from shrinking in a flex container
-                whiteSpace: 'nowrap', // Ensures the text and icon do not wrap
+                whiteSpace: 'nowrap',
+                ml: 'auto',
               }}
             >
               Match <ArrowForwardIcon />

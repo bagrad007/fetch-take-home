@@ -9,6 +9,7 @@ favorited, or remove them from the favorites list.
 
 Once you click "Match" You'll be paired with a random favorite from your list and will see the confetti for your favorite!
 
+You can visit the deployed code on the github page [https://bagrad007.github.io/fetch-take-home]
 ## Available Scripts
 
 In the project directory, you can run:
