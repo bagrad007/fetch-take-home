@@ -1,7 +1,13 @@
 # fetch take home project
 
 This is a take home project I was sent by the company fetch!
-There isn't a whole lot to running the app locally,
+All you have to do after cloning and downloading is enter a Name and Email (it doesn't check for valid email composition)
+and you can start searching and filtering different dogs by breed, age, and name!
+After you search for results, you can click the little heart icon to favorite any dogs you want to match with.
+A favorites bar will then appear at the top of the page, and from there you can choose to match with whatever dogs you've
+favorited, or remove them from the favorites list.
+
+Once you click "Match" You'll be paired with a random favorite from your list and will see the confetti for your favorite!
 
 ## Available Scripts
 
@@ -17,31 +23,16 @@ You will also see any lint errors in the console.
 
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Launches the test runner in the interactive watch mode.
 
-### `npm run build`
+### `lint`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Runs eslint to check for any linting errors. Does not fix any lintable errors
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### `lint:fix`
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Runs eslint and fixes any linting errors it finds alongs the way.
 
-### `npm run eject`
+### `format`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Runs prettier on all files within the src folder and changes based on user specifications.
