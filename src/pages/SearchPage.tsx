@@ -127,7 +127,7 @@ const SearchPage = () => {
             }}
           >
             <Typography variant="h4" sx={{ fontWeight: 'medium' }}>
-              Dog Search
+              D<Pets />g Search
             </Typography>
             <Button
               onClick={handleLogout}
@@ -253,11 +253,12 @@ const SearchPage = () => {
               size="small"
               onClick={handleMatch}
               sx={{
-                ml: 'auto',
-                whiteSpace: 'nowrap',
+                width: '90px', // Gives the button a fixed width
+                flexShrink: 0, // Prevents the button from shrinking in a flex container
+                whiteSpace: 'nowrap', // Ensures the text and icon do not wrap
               }}
             >
-              <ArrowForwardIcon />
+              Match <ArrowForwardIcon />
             </Button>
           </Paper>
         </Collapse>
