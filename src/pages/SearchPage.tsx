@@ -1,5 +1,5 @@
-import { Pets } from "@mui/icons-material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Pets } from '@mui/icons-material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
   Alert,
   Box,
@@ -15,28 +15,28 @@ import {
   Typography,
   useMediaQuery,
   useTheme,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { dogsApi } from "../api";
-import BreedFilter from "../components/BreedFilter";
-import DogCard from "../components/DogCard";
-import SortControls from "../components/SortControls";
-import { useAuth } from "../contexts/AuthContext";
-import { useDogs } from "../hooks/useDogs";
-import { useFavorites } from "../hooks/useFavorites";
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { dogsApi } from '../api';
+import BreedFilter from '../components/BreedFilter';
+import DogCard from '../components/DogCard';
+import SortControls from '../components/SortControls';
+import { useAuth } from '../contexts/AuthContext';
+import { useDogs } from '../hooks/useDogs';
+import { useFavorites } from '../hooks/useFavorites';
 
 const SearchPage = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [breeds, setBreeds] = useState<string[]>([]);
   const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
-  const [sortField, setSortField] = useState("breed");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [sortField, setSortField] = useState('breed');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const {
     dogs,
@@ -48,6 +48,7 @@ const SearchPage = () => {
     loadDogs,
     loadNextPage,
     loadPrevPage,
+    totalDogs,
   } = useDogs();
 
   const {
@@ -65,7 +66,7 @@ const SearchPage = () => {
         const breeds = await dogsApi.fetchBreeds();
         setBreeds(breeds);
       } catch (error) {
-        console.error("Failed to fetch breeds:", error);
+        console.error('Failed to fetch breeds:', error);
       }
     };
     initBreeds();
@@ -87,17 +88,17 @@ const SearchPage = () => {
 
   const handleLogout = async () => {
     logout();
-    navigate("/");
+    navigate('/');
   };
 
   const getLocation = (zip: string) => {
-    if (!zip) return "";
+    if (!zip) return '';
     const location = locations.find((loc) => loc?.zip_code === zip);
-    return location ? `${location.city}` : "";
+    return location ? `${location.city}` : '';
   };
 
   const DogCardSkeleton = () => (
-    <Paper sx={{ p: 2, height: "100%" }}>
+    <Paper sx={{ p: 2, height: '100%' }}>
       <Skeleton variant="rectangular" height={200} />
       <Skeleton variant="text" sx={{ mt: 1 }} />
       <Skeleton variant="text" width="60%" />
@@ -113,26 +114,26 @@ const SearchPage = () => {
             p: isMobile ? 2 : 3,
             mb: 3,
             borderBottom: 1,
-            borderColor: "divider",
+            borderColor: 'divider',
           }}
         >
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: "wrap",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
               gap: 2,
             }}
           >
-            <Typography variant="h4" sx={{ fontWeight: "medium" }}>
+            <Typography variant="h4" sx={{ fontWeight: 'medium' }}>
               Dog Search
             </Typography>
             <Button
               onClick={handleLogout}
               variant="outlined"
               color="primary"
-              size={isMobile ? "medium" : "large"}
+              size={isMobile ? 'medium' : 'large'}
             >
               Logout
             </Button>
@@ -166,7 +167,7 @@ const SearchPage = () => {
 
       <Box
         sx={{
-          position: "sticky",
+          position: 'sticky',
           top: 16,
           zIndex: 1200,
           mb: 3,
@@ -178,43 +179,43 @@ const SearchPage = () => {
             elevation={2}
             sx={{
               p: 1.5,
-              display: "flex",
+              display: 'flex',
               gap: 2,
-              overflowX: "auto",
-              alignItems: "center",
-              background: "rgba(255, 255, 255, 0.95)",
-              backdropFilter: "blur(8px)",
+              overflowX: 'auto',
+              alignItems: 'center',
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(8px)',
             }}
           >
             <Typography
               variant="subtitle2"
               sx={{
                 pl: 1,
-                whiteSpace: "nowrap",
-                color: "primary.main",
+                whiteSpace: 'nowrap',
+                color: 'primary.main',
               }}
             >
               Favorites:
             </Typography>
             <Box
               sx={{
-                display: "flex",
+                display: 'flex',
                 gap: 1,
-                flexWrap: "nowrap",
-                overflowX: "auto",
-                "&::-webkit-scrollbar": {
+                flexWrap: 'nowrap',
+                overflowX: 'auto',
+                '&::-webkit-scrollbar': {
                   height: 6,
                 },
-                "&::-webkit-scrollbar-track": {
-                  background: "#f1f1f1",
+                '&::-webkit-scrollbar-track': {
+                  background: '#f1f1f1',
                   borderRadius: 3,
                 },
-                "&::-webkit-scrollbar-thumb": {
-                  background: "#888",
+                '&::-webkit-scrollbar-thumb': {
+                  background: '#888',
                   borderRadius: 3,
                 },
-                "&::-webkit-scrollbar-thumb:hover": {
-                  background: "#555",
+                '&::-webkit-scrollbar-thumb:hover': {
+                  background: '#555',
                 },
               }}
             >
@@ -223,12 +224,12 @@ const SearchPage = () => {
                   key={dog.id}
                   label={
                     <Box
-                      sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                      sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}
                     >
                       <Typography variant="body2">{dog.name}</Typography>
                       <Typography
                         variant="caption"
-                        sx={{ color: "text.secondary" }}
+                        sx={{ color: 'text.secondary' }}
                       >
                         ({dog.breed})
                       </Typography>
@@ -239,9 +240,9 @@ const SearchPage = () => {
                   color="primary"
                   variant="outlined"
                   sx={{
-                    minWidth: "fit-content",
-                    "& .MuiChip-label": {
-                      whiteSpace: "nowrap",
+                    minWidth: 'fit-content',
+                    '& .MuiChip-label': {
+                      whiteSpace: 'nowrap',
                     },
                   }}
                 />
@@ -252,8 +253,8 @@ const SearchPage = () => {
               size="small"
               onClick={handleMatch}
               sx={{
-                ml: "auto",
-                whiteSpace: "nowrap",
+                ml: 'auto',
+                whiteSpace: 'nowrap',
               }}
             >
               <ArrowForwardIcon />
@@ -265,20 +266,20 @@ const SearchPage = () => {
       <Fade in timeout={1000}>
         <Box
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
             mb: 3,
-            position: "relative",
+            position: 'relative',
             px: { xs: 1, md: 2 },
-            flexDirection: isMobile ? "column" : "row",
+            flexDirection: isMobile ? 'column' : 'row',
             gap: isMobile ? 2 : 0,
           }}
         >
           <Box
             sx={{
-              width: isMobile ? "100%" : "calc(100% - 250px)",
-              maxWidth: isMobile ? "100%" : "calc(100% - 250px)",
+              width: isMobile ? '100%' : 'calc(100% - 250px)',
+              maxWidth: isMobile ? '100%' : 'calc(100% - 250px)',
             }}
           >
             <BreedFilter
@@ -290,11 +291,11 @@ const SearchPage = () => {
 
           <Box
             sx={{
-              width: isMobile ? "100%" : "240px",
-              display: "flex",
+              width: isMobile ? '100%' : '240px',
+              display: 'flex',
               gap: 1,
-              alignItems: "center",
-              justifyContent: isMobile ? "flex-start" : "flex-end",
+              alignItems: 'center',
+              justifyContent: isMobile ? 'flex-start' : 'flex-end',
             }}
           >
             <SortControls
@@ -309,6 +310,12 @@ const SearchPage = () => {
         </Box>
       </Fade>
 
+      <Box sx={{ ml: isMobile ? '26%' : '39%' }}>
+        <Typography variant="body1" color="text.secondary">
+          Showing {dogs.length} of {totalDogs} dogs
+        </Typography>
+      </Box>
+
       {/* Grid for dogs */}
 
       <Grid container spacing={3} sx={{ mb: 10 }}>
@@ -320,8 +327,8 @@ const SearchPage = () => {
           ))
         ) : dogs.length === 0 ? (
           <Grid item xs={12}>
-            <Paper sx={{ p: 4, textAlign: "center" }}>
-              <Pets sx={{ fontSize: 60, color: "text.secondary", mb: 2 }} />
+            <Paper sx={{ p: 4, textAlign: 'center' }}>
+              <Pets sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
               <Typography variant="h6" color="text.secondary">
                 No dogs found
               </Typography>
@@ -349,14 +356,15 @@ const SearchPage = () => {
       </Grid>
 
       {/* Pagination */}
-
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-          mb: 1.5,
+          display: 'flex',
+          justifyContent: 'center',
+          gap: 2,
+          bottom: 5,
+          margin: 'auto',
+          width: '50%',
+          padding: '10px',
         }}
       >
         <Button
@@ -366,15 +374,11 @@ const SearchPage = () => {
               breeds: selectedBreeds,
               sort: `${sortField}:${sortDirection}`,
             });
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigate('.', { state: { scrollToTop: true } });
           }}
         >
           Previous Page
         </Button>
-
-        <Typography variant="body1" color="text.secondary">
-          Page Results: {dogs.length}
-        </Typography>
 
         <Button
           disabled={!nextCursor || isLoading}
@@ -383,10 +387,9 @@ const SearchPage = () => {
               breeds: selectedBreeds,
               sort: `${sortField}:${sortDirection}`,
             });
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            navigate('.', { state: { scrollToTop: true } });
           }}
-          variant="contained"
-          size={isMobile ? "medium" : "large"}
+          size={isMobile ? 'medium' : 'large'}
         >
           Next Page
         </Button>
@@ -400,20 +403,20 @@ const SearchPage = () => {
         <Fade in={!!matchedDog}>
           <Paper
             sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
               p: isMobile ? 2 : 4,
               maxWidth: 600,
-              maxHeight: "90vh",
-              overflow: "auto",
+              maxHeight: '90vh',
+              overflow: 'auto',
               borderRadius: 2,
             }}
           >
             {matchedDog && (
               <>
-                <Typography variant="h5" sx={{ mb: 3, textAlign: "center" }}>
+                <Typography variant="h5" sx={{ mb: 3, textAlign: 'center' }}>
                   🎉 Your Perfect Match! 🎉
                 </Typography>
                 <DogCard

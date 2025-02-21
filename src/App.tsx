@@ -1,14 +1,14 @@
-import { ThemeProvider } from "@mui/material";
-import theme from "./theme";
+import { ThemeProvider } from '@mui/material';
+import theme from './theme';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
-} from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
-import LoginPage from "./pages/LoginPage";
-import SearchPage from "./pages/SearchPage";
+} from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import LoginPage from './pages/LoginPage';
+import SearchPage from './pages/SearchPage';
 
 const App = () => (
   <ThemeProvider theme={theme}>

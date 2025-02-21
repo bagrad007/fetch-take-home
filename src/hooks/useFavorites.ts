@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
-import { dogsApi } from "../api";
-import type { Dog, FavoriteDog } from "../types";
+import { useState, useCallback } from 'react';
+import { dogsApi } from '../api';
+import type { Dog, FavoriteDog } from '../types';
 
 export const useFavorites = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -37,7 +37,7 @@ export const useFavorites = () => {
       const [matched] = await dogsApi.fetchDogs([matchId]);
       setMatchedDog(matched);
     } catch (error) {
-      console.error("Failed to generate match:", error);
+      console.error('Failed to generate match:', error);
     }
   }, [favorites]);
 

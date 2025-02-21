@@ -1,10 +1,4 @@
-import {
-  Autocomplete,
-  Chip,
-  TextField,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Autocomplete, Chip, TextField } from '@mui/material';
 
 interface BreedFilterProps {
   breeds: string[];
@@ -30,7 +24,7 @@ const BreedFilter = ({
           variant="outlined"
           placeholder="Filter breeds..."
           sx={{
-            width: "100%",
+            width: '100%',
           }}
         />
       )}
@@ -42,40 +36,40 @@ const BreedFilter = ({
             label={option}
             size="small"
             sx={{
-              maxWidth: "120px",
-              "& .MuiChip-label": {
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
+              maxWidth: '120px',
+              '& .MuiChip-label': {
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
               },
             }}
           />
         ))
       }
       sx={{
-        width: "100%",
-        "& .MuiAutocomplete-inputRoot": {
-          flexWrap: "wrap",
-          maxHeight: "100px",
-          overflowY: "auto",
-          "&::-webkit-scrollbar": {
-            width: "8px",
+        width: '100%',
+        '& .MuiAutocomplete-inputRoot': {
+          flexWrap: 'wrap',
+          maxHeight: '100px',
+          overflowY: 'auto',
+          '&::-webkit-scrollbar': {
+            width: '8px',
           },
-          "&::-webkit-scrollbar-track": {
-            background: "#f1f1f1",
-            borderRadius: "4px",
+          '&::-webkit-scrollbar-track': {
+            background: '#f1f1f1',
+            borderRadius: '4px',
           },
-          "&::-webkit-scrollbar-thumb": {
-            background: "#888",
-            borderRadius: "4px",
-            "&:hover": {
-              background: "#555",
+          '&::-webkit-scrollbar-thumb': {
+            background: '#888',
+            borderRadius: '4px',
+            '&:hover': {
+              background: '#555',
             },
           },
         },
-        "& .MuiAutocomplete-tag": {
-          maxWidth: "120px",
-          margin: "2px",
+        '& .MuiAutocomplete-tag': {
+          maxWidth: '120px',
+          margin: '2px',
         },
       }}
     />

@@ -33,9 +33,8 @@ export interface DogSearchResponse {
   prev?: string | undefined;
 }
 
-export type FavoriteDog = Pick<Dog, "id" | "name" | "breed">;
+export type FavoriteDog = Pick<Dog, 'id' | 'name' | 'breed'>;
 
-// Component Props
 export interface DogCardProps {
   dog: Dog;
   isFavorite: boolean;
@@ -51,8 +50,8 @@ export interface BreedFilterProps {
 
 export interface SortControlsProps {
   sortField: string;
-  sortDirection: "asc" | "desc";
-  onSortChange: (field: string, direction: "asc" | "desc") => void;
+  sortDirection: 'asc' | 'desc';
+  onSortChange: (field: string, direction: 'asc' | 'desc') => void;
 }
 
 export interface LoginFormProps {

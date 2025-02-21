@@ -1,14 +1,14 @@
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import {
   Card,
   CardContent,
   CardMedia,
   IconButton,
   Typography,
-} from "@mui/material";
-import { useState } from "react";
-import { Dog } from "../types";
+} from '@mui/material';
+import { useState } from 'react';
+import { Dog } from '../types';
 
 interface DogCardProps {
   dog: Dog;
@@ -26,7 +26,7 @@ const DogCard = ({
   const [imageError, setImageError] = useState(false);
 
   const fallbackImage =
-    "https://via.placeholder.com/200x200?text=No+Image+Available";
+    'https://via.placeholder.com/200x200?text=No+Image+Available';
 
   return (
     <Card sx={{ maxWidth: 345, m: 2 }}>
@@ -37,8 +37,8 @@ const DogCard = ({
         alt={dog.name}
         onError={() => setImageError(true)}
         sx={{
-          objectFit: "cover",
-          bgcolor: "grey.200",
+          objectFit: 'cover',
+          bgcolor: 'grey.200',
         }}
       />
       <CardContent>
@@ -48,7 +48,7 @@ const DogCard = ({
         {location && <Typography>Location: {location}</Typography>}
         <IconButton
           onClick={() => onFavoriteToggle(dog.id)}
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
         >
           {isFavorite ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
         </IconButton>

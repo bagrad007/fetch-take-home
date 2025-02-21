@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -6,15 +6,15 @@ import {
   Typography,
   Container,
   Paper,
-} from "@mui/material";
+} from '@mui/material';
 
 interface LoginFormProps {
   onSubmit: (name: string, email: string) => void;
 }
 
 const LoginForm = ({ onSubmit }: LoginFormProps) => {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,8 +28,8 @@ const LoginForm = ({ onSubmit }: LoginFormProps) => {
           component="form"
           onSubmit={handleSubmit}
           sx={{
-            display: "flex",
-            flexDirection: "column",
+            display: 'flex',
+            flexDirection: 'column',
             gap: 2,
           }}
         >

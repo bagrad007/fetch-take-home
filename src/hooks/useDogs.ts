@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
-import { dogsApi, locationsApi } from "../api";
-import type { Dog, Location, DogSearchParams } from "../types";
+import { useState, useCallback } from 'react';
+import { dogsApi, locationsApi } from '../api';
+import type { Dog, Location, DogSearchParams } from '../types';
 
 export const useDogs = () => {
   const [dogs, setDogs] = useState<Dog[]>([]);
@@ -26,8 +26,8 @@ export const useDogs = () => {
 
       const extractFromValue = (url: string | undefined) => {
         if (!url) return undefined;
-        const searchParams = new URLSearchParams(url.split("?")[1]);
-        return searchParams.get("from") || undefined;
+        const searchParams = new URLSearchParams(url.split('?')[1]);
+        return searchParams.get('from') || undefined;
       };
 
       setNextCursor(extractFromValue(searchResult.next));
@@ -52,8 +52,7 @@ export const useDogs = () => {
         setLocations([]);
       }
     } catch (error) {
-      setError("Failed to load dogs. Please try again.");
-      console.error("Failed to load dogs:", error);
+      setError('Failed to load dogs. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -62,7 +61,6 @@ export const useDogs = () => {
   const loadNextPage = useCallback(
     (currentParams: DogSearchParams) => {
       if (nextCursor) {
-        console.log("Loading next page with cursor:", nextCursor);
         loadDogs({
           ...currentParams,
           from: nextCursor,
