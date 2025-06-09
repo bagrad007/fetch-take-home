@@ -7,7 +7,7 @@ import {
   IconButton,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dog } from '../types';
 
 interface DogCardProps {
@@ -24,6 +24,10 @@ const DogCard = ({
   location,
 }: DogCardProps) => {
   const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+  }, [dog.img]);
 
   const fallbackImage =
     'https://via.placeholder.com/200x200?text=No+Image+Available';
